@@ -95,9 +95,19 @@ function showErrorView(message) {
 
 function renderResult(data) {
   document.getElementById('res-name').textContent = data.name;
-  document.getElementById('res-city').textContent = data.city;
+
+  let cityText = data.city;
+  if (data.otherCitiesCount && data.otherCitiesCount > 0) {
+    cityText += ' (+' + data.otherCitiesCount + ' order ke kota lain)';
+  }
+  document.getElementById('res-city').textContent = cityText;
+
   document.getElementById('res-qty').textContent = data.quantity + (data.quantity > 1 ? ' Shirts' : ' Shirt');
-  document.getElementById('res-shipping').textContent = formatRupiah(data.shippingFee);
+
+  const shippingText = data.shippingMultiplier > 1
+    ? formatRupiah(data.shippingFee) + ' x' + data.shippingMultiplier + ' = ' + formatRupiah(data.totalShipping)
+    : formatRupiah(data.shippingFee);
+  document.getElementById('res-shipping').textContent = shippingText;
   document.getElementById('res-code').textContent = data.uniqueCodeDisplay;
   document.getElementById('res-total').textContent = formatRupiah(data.totalPayment);
 
