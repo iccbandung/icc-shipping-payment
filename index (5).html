@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICC - Konfirmasi Pembayaran Ongkir</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">ICC</div>
+    <div class="tagline">Konfirmasi Pembayaran Ongkir</div>
+  </header>
+
+  <main class="container">
+
+    <!-- VIEW: SEARCH -->
+    <section id="view-search" class="view">
+      <h1 class="title">Cari Order Kamu</h1>
+      <p class="subtitle">Masukkan nomor telepon yang kamu pakai saat mengisi form pre-order kaos.</p>
+
+      <form id="search-form" class="card">
+        <label for="phone-input" class="label">Nomor Telepon</label>
+        <input
+          type="tel"
+          id="phone-input"
+          class="input"
+          placeholder="08123456789"
+          inputmode="numeric"
+          autocomplete="tel"
+          required
+        >
+        <button type="submit" id="search-btn" class="btn btn-primary">Search Order</button>
+      </form>
+    </section>
+
+    <!-- VIEW: LOADING -->
+    <section id="view-loading" class="view hidden">
+      <div class="loading-box">
+        <div class="spinner"></div>
+        <p id="loading-text">Mencari order kamu...</p>
+      </div>
+    </section>
+
+    <!-- VIEW: NOT FOUND -->
+    <section id="view-not-found" class="view hidden">
+      <div class="card center">
+        <h2>Order not found.</h2>
+        <p class="muted">Please check the phone number you used when placing your order.</p>
+        <p class="muted">Pastikan nomor yang kamu masukkan sama dengan nomor saat mengisi form pre-order.</p>
+        <a id="wa-not-found" class="btn btn-whatsapp" target="_blank" rel="noopener">Contact Caki via WhatsApp</a>
+        <button class="btn btn-secondary" onclick="showView('search')">Cari Lagi</button>
+      </div>
+    </section>
+
+    <!-- VIEW: CONFLICT -->
+    <section id="view-conflict" class="view hidden">
+      <div class="card center">
+        <h2>We found a problem with your order data.</h2>
+        <p class="muted">Please contact ICC for confirmation.</p>
+        <div class="admin-contact">
+          <strong>Caki</strong><br>
+          082219225919
+        </div>
+        <a id="wa-conflict" class="btn btn-whatsapp" target="_blank" rel="noopener">Contact Caki</a>
+        <button class="btn btn-secondary" onclick="showView('search')">Kembali</button>
+      </div>
+    </section>
+
+    <!-- VIEW: RESULT (order detail + payment + upload) -->
+    <section id="view-result" class="view hidden">
+
+      <div class="card">
+        <h2 class="section-title">Detail Order</h2>
+        <div class="detail-row">
+          <span class="detail-label">Name</span>
+          <span class="detail-value" id="res-name">-</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">City</span>
+          <span class="detail-value" id="res-city">-</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Order</span>
+          <span class="detail-value" id="res-qty">-</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Shipping Fee</span>
+          <span class="detail-value" id="res-shipping">-</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Unique Code</span>
+          <span class="detail-value" id="res-code">-</span>
+        </div>
+        <div class="detail-row total-row">
+          <span class="detail-label">Total Payment</span>
+          <span class="detail-value total-value" id="res-total">-</span>
+        </div>
+      </div>
+
+      <!-- Sudah upload sebelumnya -->
+      <div id="already-submitted" class="card center hidden">
+        <div class="check-badge">✓</div>
+        <p class="submitted-text">Payment proof submitted</p>
+        <button id="btn-show-replace" class="btn btn-secondary">Replace Payment Proof</button>
+      </div>
+
+      <!-- Belum bayar / mau upload -->
+      <div id="payment-section" class="card">
+        <h2 class="section-title">Transfer Ongkir</h2>
+
+        <div class="bank-box">
+          <div class="bank-name" id="bank-name">-</div>
+          <div class="bank-row">
+            <div>
+              <div class="bank-label">Account Number</div>
+              <div class="bank-value" id="bank-account">-</div>
+            </div>
+            <button class="btn-copy" id="copy-account" type="button">Copy</button>
+          </div>
+          <div class="bank-row">
+            <div>
+              <div class="bank-label">Account Name</div>
+              <div class="bank-value" id="bank-holder">-</div>
+            </div>
+          </div>
+          <div class="bank-row">
+            <div>
+              <div class="bank-label">Total Payment</div>
+              <div class="bank-value bank-total" id="bank-total">-</div>
+            </div>
+            <button class="btn-copy" id="copy-total" type="button">Copy</button>
+          </div>
+        </div>
+
+        <p class="hint">Transfer sesuai nominal <strong>Total Payment</strong> di atas (termasuk kode unik) agar mudah dicocokkan.</p>
+
+        <h2 class="section-title upload-title">Upload Bukti Transfer</h2>
+        <form id="upload-form">
+          <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.pdf" class="file-input" required>
+          <p class="file-hint">Format: JPG, PNG, atau PDF. Maksimal 5 MB.</p>
+          <div id="upload-error" class="error-text hidden"></div>
+          <button type="submit" id="upload-btn" class="btn btn-primary">Upload Bukti Transfer</button>
+        </form>
+      </div>
+
+    </section>
+
+    <!-- VIEW: UPLOAD SUCCESS -->
+    <section id="view-success" class="view hidden">
+      <div class="card center">
+        <div class="check-badge">✓</div>
+        <h2>Payment proof submitted!</h2>
+        <p class="muted">Your shipping payment has been recorded. Tidak perlu mengirim bukti lagi lewat WhatsApp.</p>
+        <button class="btn btn-secondary" onclick="showView('search')">Selesai</button>
+      </div>
+    </section>
+
+    <!-- VIEW: GENERIC ERROR -->
+    <section id="view-error" class="view hidden">
+      <div class="card center">
+        <h2>Terjadi kesalahan</h2>
+        <p class="muted" id="error-message">Silakan coba lagi.</p>
+        <button class="btn btn-secondary" onclick="showView('search')">Kembali</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">ICC &middot; Shipping Payment Confirmation</footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
