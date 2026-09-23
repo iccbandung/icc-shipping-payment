@@ -31,16 +31,17 @@ body {
 }
 
 .topbar {
-  background: var(--accent);
+  background: #191919;
   color: #fff;
   padding: 20px 16px 24px;
   text-align: center;
 }
 
-.brand {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 1px;
+.brand-logo {
+  height: 40px;
+  width: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 .tagline {
@@ -123,16 +124,16 @@ body {
 }
 
 .btn-primary {
-  background: var(--accent);
+  background: #ac0002;
   color: #fff;
 }
 
 .btn-primary:active {
-  background: var(--accent-dark);
+  background: #8a0002;
 }
 
 .btn-primary:disabled {
-  background: #a5a6f0;
+  background: #d99a9a;
   cursor: not-allowed;
 }
 
